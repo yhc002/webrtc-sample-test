@@ -105,7 +105,8 @@ async function call() {
 function move() {
   console.log('move');
   remoteVideo2.srcObject = remoteVideo.srcObject;
-  remoteVideo.srcObject = null;
+  
+  setTimeout(()=>{remoteVideo.srcObject = null;}, 1000);
 }
 
 function onCreateSessionDescriptionError(error) {
