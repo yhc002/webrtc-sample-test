@@ -16,6 +16,11 @@ const localVideo = document.getElementById('localVideo');
 const remoteVideo = document.getElementById('remoteVideo');
 const remoteVideo2 = document.getElementById('remoteVideo2');
 
+const codecPreferences = document.getElementById('codecPreferences');
+const supportsSetCodecPreferences = window.RTCRtpTransceiver &&
+  'setCodecPreferences' in window.RTCRtpTransceiver.prototype;
+const delayPreferences = document.getElementById('delayPreferences');
+
 localVideo.addEventListener('loadedmetadata', function() {
   console.log(`Local video videoWidth: ${this.videoWidth}px,  videoHeight: ${this.videoHeight}px`);
 });
@@ -63,9 +68,22 @@ async function start() {
   } catch (e) {
     alert(`getUserMedia() error: ${e.name}`);
   }
+  if(supportsSetCodecPreferences) {
+    const {codecs} = RTCRtpSender.getCapabilities('video');
+    codecs.forEach(codec => {
+      if (['video/red', 'video/ulpfec', 'video/rtx'].includes(codec.mimeType)) {
+        return;
+      }
+      const option = document.createElement('option');
+      option.value = (codec.mimeType + ' ' + (codec.sdpFmtpLine || '')).trim();
+      option.innerText = option.value;
+      codecPreferences.appendChild(option);
+    });
+    codecPreferences.disabled = false;
+  }
 }
 
-async function call() {
+async function call(mimeType) {
   callButton.disabled = true;
   hangupButton.disabled = false;
   console.log('Starting call');
@@ -92,6 +110,8 @@ async function call() {
 
   localStream.getTracks().forEach(track => pc1.addTrack(track, localStream));
   console.log('Added local stream to pc1');
+  codecPreferences.disabled = true;
+  delayPreferences.disabled = true;
 
   try {
     console.log('pc1 createOffer start');
@@ -103,10 +123,12 @@ async function call() {
 }
 
 function move() {
-  console.log('move');
+  console.log('move', delayPreferences.options[delayPreferences.selectedIndex].value);
   remoteVideo2.srcObject = remoteVideo.srcObject;
   
-  setTimeout(()=>{remoteVideo.srcObject = null;}, 1000);
+  setTimeout(()=>{
+    remoteVideo.srcObject = null;
+  }, delayPreferences.options[delayPreferences.selectedIndex].value);
 }
 
 function onCreateSessionDescriptionError(error) {
@@ -156,6 +178,20 @@ function onSetSessionDescriptionError(error) {
 }
 
 function gotRemoteStream(e) {
+  // Set codec preferences on the receiving side.
+  if (e.track.kind === 'video' && supportsSetCodecPreferences) {
+    const preferredCodec = codecPreferences.options[codecPreferences.selectedIndex];
+    if (preferredCodec.value !== '') {
+      const [mimeType, sdpFmtpLine] = preferredCodec.value.split(' ');
+      const {codecs} = RTCRtpReceiver.getCapabilities('video');
+      const selectedCodecIndex = codecs.findIndex(c => c.mimeType === mimeType && c.sdpFmtpLine === sdpFmtpLine);
+      const selectedCodec = codecs[selectedCodecIndex];
+      codecs.splice(selectedCodecIndex, 1);
+      codecs.unshift(selectedCodec);
+      e.transceiver.setCodecPreferences(codecs);
+      console.log('Receiver\'s preferred video codec', selectedCodec);
+    }
+  }
   if (remoteVideo.srcObject !== e.streams[0]) {
     remoteVideo.srcObject = e.streams[0];
     console.log('pc2 received remote stream');
@@ -175,6 +211,17 @@ async function onCreateAnswerSuccess(desc) {
   try {
     await pc1.setRemoteDescription(desc);
     onSetRemoteSuccess(pc1);
+    // Display the video codec that is actually used.
+    setTimeout(async () => {
+        const stats = await pc1.getStats();
+        stats.forEach(stat => {
+            if (!(stat.type === 'outbound-rtp' && stat.kind === 'video')) {
+                return;
+            }
+            const codec = stats.get(stat.codecId);
+            message_codec.innerText="video codec: " + JSON.stringify(codec);
+        });
+    }, 1000);
   } catch (e) {
     onSetSessionDescriptionError(e);
   }
@@ -213,4 +260,5 @@ function hangup() {
   pc2 = null;
   hangupButton.disabled = true;
   callButton.disabled = false;
+  delayPreferences.disabled = false;
 }

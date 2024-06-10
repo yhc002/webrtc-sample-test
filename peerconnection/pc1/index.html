@@ -13,7 +13,6 @@
     <meta name="description" content="WebRTC code samples">
     <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
     <meta itemprop="description" content="Client-side WebRTC code samples">
-    <meta itemprop="image" content="../../../images/webrtc-icon-192x192.png">
     <meta itemprop="name" content="WebRTC code samples">
     <meta name="mobile-web-app-capable" content="yes">
     <meta id="theme-color" name="theme-color" content="#ffffff">
@@ -22,9 +21,8 @@
 
     <title>Peer connection</title>
 
-    <link rel="icon" sizes="192x192" href="../../../images/webrtc-icon-192x192.png">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="../../../css/main.css"/>
+    <!-- <link rel="stylesheet" href="../../../css/main.css"/> -->
     <link rel="stylesheet" href="css/main.css"/>
 
 </head>
@@ -44,6 +42,27 @@
     <video id="remoteVideo2" playsinline autoplay></video>
 
     <div class="box">
+        <span>Codec preferences:</span>
+        <select id="codecPreferences" disabled>
+            <option selected value="">Default</option>
+        </select>
+        <div id="actualCodec"></div>
+    </div>
+    <div class="box">
+        <span>Delay:</span>
+        <select id="delayPreferences">
+            <option selected value=500>500ms</option>
+            <option value=1000>1000ms</option>
+            <option value=1500>1500ms</option>
+            <option value=2000>2000ms</option>
+            <option value=2500>2500ms</option>
+            <option value=3000>3000ms</option>
+        </select>
+        <div id="actualCodec"></div>
+    </div>
+    <pre style="font-size: 22px;" id="message_codec"></pre>
+
+    <div class="box">
         <button id="startButton">Start</button>
         <button id="callButton">Call</button>
         <button id="moveButton">Move</button>
@@ -56,6 +75,5 @@
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script src="js/main.js" async></script>
 
-<script src="../../../js/lib/ga.js"></script>
 </body>
 </html>
