@@ -124,13 +124,14 @@ async function call(mimeType) {
 
 function move() {
   console.log('move', delayPreferences.options[delayPreferences.selectedIndex].value);
-  remoteVideo2.srcObject = remoteVideo.srcObject;
+  let srcObject = remoteVideo.srcObject;
   let delay = delayPreferences.options[delayPreferences.selectedIndex].value;
+  if(delay==0) {
+    remoteVideo.srcObject = null;
+  }
+  remoteVideo2.srcObject = srcObject;
   if(delay>0) {
     setTimeout(()=>{ remoteVideo.srcObject = null; }, delay);
-  }
-  else {
-    remoteVideo.srcObject = null;
   }
 }
 
