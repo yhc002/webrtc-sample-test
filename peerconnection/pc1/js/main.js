@@ -260,5 +260,6 @@ function hangup() {
   pc2 = null;
   hangupButton.disabled = true;
   callButton.disabled = false;
+  codecPreferences.disabled = false;
   delayPreferences.disabled = false;
 }
