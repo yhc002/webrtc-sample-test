@@ -125,10 +125,13 @@ async function call(mimeType) {
 function move() {
   console.log('move', delayPreferences.options[delayPreferences.selectedIndex].value);
   remoteVideo2.srcObject = remoteVideo.srcObject;
-  
-  setTimeout(()=>{
+  let delay = delayPreferences.options[delayPreferences.selectedIndex].value;
+  if(delay>0) {
+    setTimeout(()=>{ remoteVideo.srcObject = null; }, delay);
+  }
+  else {
     remoteVideo.srcObject = null;
-  }, delayPreferences.options[delayPreferences.selectedIndex].value);
+  }
 }
 
 function onCreateSessionDescriptionError(error) {
