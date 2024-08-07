@@ -67,7 +67,7 @@ async function start() {
     try {
         console.log("start")
         const videoSource = videoSelect.value;
-        constraints = { video: { deviceId: videoSource ? {exact: videoSource} : undefined, width: {min: 640, ideal: 1280}, height: {min: 480, ideal: 720} }, hwPreview: {ideal: enableHwPreview.checked} }
+        constraints = { video: { deviceId: videoSource ? {exact: videoSource} : undefined, width: {min: 640, ideal: 1280}, height: {min: 480, ideal: 720}, hwPreview: {ideal: enableHwPreview.checked} }}
         stream = await navigator.mediaDevices.getUserMedia(constraints); //constraints
         message.innerText="getUserMedia with constraints: " + JSON.stringify(constraints);
         gotStream(stream);
