@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>getUserMedia HWPreview Test</title>
+</head>
+
+<body style="background-color: white;">
+<div id="container">
+    <div class="select">
+        <label for="videoSource">Video source: </label><select id="videoSource"></select>
+        <input type="checkbox" id="hw_preview">HWPreview</input>
+    </div>
+    <pre style="font-size: 22px;"> getUserMedia HWPreview Test</pre>
+    <video id="video" playsinline autoplay></video>
+
+    <div class="box">
+        <button id="enumerateButton">Enumerate</button>
+        <button id="startButton">Start</button>
+    </div>
+
+    <pre style="font-size: 22px;" id="message" />
+</div>
+<script src="js/main.js" async></script>
+</body>
+</html>
