@@ -209,6 +209,8 @@ function hangup() {
     pc.remoteView = null;
   });
 
+  while(PCs.pop()){}
+
   startTestButton.disabled = false;
   hangupButton.disabled = true;
   codecPreferences.disabled = false;
