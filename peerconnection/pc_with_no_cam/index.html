@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<!--
+ *  Copyright (c) 2016 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+-->
+<html>
+<head>
+
+  <title>Multiple peerconnections</title>
+
+  <!-- <link rel="stylesheet" href="../css/main.css"> -->
+  <style>
+    body {
+      background-color: white;
+    }
+    video {
+      background: black;
+      width: 30%;
+    }
+    /* button {
+      height: 50px;
+      width: 100px;
+    } */
+</style>
+
+</head>
+
+<body>
+
+<div id="wrapper">
+  <div id="container">
+    <div class="bottom-border">
+      <h3>multiple-peerconnections-with-no-camera</h3>
+      <label>
+        source video
+        <select id="video-sources">
+          <option value="video/SampleVideo_360x240_1mb.mp4">1.SampleVideo_360x240_1mb.mp4 (320 × 240)</option>
+          <option value="video/chrome.mp4">2.chrome.mp4 (480 × 270)</option>
+          <option selected value="video/trailer.mp4">3.trailer.mp4 (854 × 480)</option>
+          <option value="video/ForBiggerEscapes.mp4">4.ForBiggerEscapes.mp4 (1280 × 720)</option>
+      </select>
+      </label><br>
+
+      <label>
+        Number of peer connections
+        <select id="num-peerconnections">
+          <option selected value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+      </select>
+      </label><br>
+      <label>
+        Enable googCpuOveruseDetection
+        <input type="checkbox" id="cpuoveruse-detection" checked>
+      </label><br>
+      <div class="box">
+        <span>Codec List:</span>
+        <select id="codecPreferences">
+            <option selected value="">Default</option>
+        </select>
+        <div id="actualCodec"></div>
+      </div>
+      <label>
+        prefered codec
+        <input id="prefered-codec" value="">
+      </label><br>
+      <button class="green" id="start-test">Start Test</button>
+      <button id="hangupButton">Hang Up</button>
+
+    </div>
+
+    <div class="video-area">
+      <h3>Video Source</h3>
+      <video id="video-source" playsinline controls loop muted>
+        <source src="video/trailer.mp4" type="video/mp4;decoder=sw" crossOrigin="anonymous" />
+      </video>
+      <br>
+      <h3>Remote Streams</h3>
+      <div id="video-area">
+        <video id="remote-video1" playsinline autoplay muted></video>
+        <video id="remote-video2" playsinline autoplay muted></video>
+        <video id="remote-video3" playsinline autoplay muted></video>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
+
