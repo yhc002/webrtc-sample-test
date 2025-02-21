@@ -84,12 +84,10 @@ function maybeCreateStream() {
       mediaStream = videoSource.captureStream();
       console.log('Captured stream from videoSource with captureStream',
       mediaStream);
-      call();
     } else if (videoSource.mozCaptureStream) {
       mediaStream = videoSource.mozCaptureStream();
       console.log('Captured stream from videoSource with mozCaptureStream()',
       mediaStream);
-      call();
     } else {
       console.log('captureStream() not supported');
     }
